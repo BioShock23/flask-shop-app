@@ -1,0 +1,128 @@
+{% extends 'layout.html' %}
+{% block body %}
+    <h1>Каталог</h1><br />
+    <div class="width-max">
+    {% if session.logged_in %}
+        <a href="/add_category" class="btn btn-catalog">Добавить категорию</a>
+        <a href="/add_item" class="btn btn-catalog">Добавить товар</a>
+        <br />
+        <br />
+    {% endif %}
+    </div>
+    <table class="table table-striped">
+      
+      <tr>
+        <td class="table-catalog">
+            <h5 class="h5-catalog"><i class="fas fa-tags"></i>&nbsp;Категории</h5>
+            <ul class="list-group">
+            {% for cat in catalog %}
+                <li class="list-group-item catalog-list">
+                    <table class="table-responsive">
+                        <tr>
+                            <td class="td1-catalog"><a class="a-cat-catalog" href="{{cat.name}}">{{ cat.name }}</a></td>
+                            {% if session.logged_in and (cat.user_id==user_id) %}
+                            <td class="td2-catalog"><a href="edit_cat/{{cat.id}}" class="btn btn-edit pull-right">Изменить</a></td>
+                            <td class="td2-catalog">
+                                
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-delete" data-toggle="modal" data-target="#deleteWarning{{loop.index}}">
+                                Удалить
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteWarning{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="deleteWarningLabel" aria-hidden="false" >
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Внимание</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Вы уверены что хотите удалить {{ cat.name }}?<br />
+                                        Все предметы данной категории будут удалены!
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-go-back" data-dismiss="modal">Назад</button>
+                                        <div class="btn btn-del-inline">
+                                            <form action={{ url_for('delete_cat', id=cat.id) }} method='post'>
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="submit" value="Delete" class="btn btn-delete">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                
+                            </td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </li>
+            {% endfor %}
+            </ul>
+        </td>
+        <td class="table-catalog">
+            <h5 class="h5-catalog">10 последних товаров</h5>
+            <ul class="list-group">
+            {% for item in latestitems %}
+                <li class="list-group-item catalog-list">
+                    <table class="table-responsive">
+                        <tr>
+                            <td class="td1-catalog"><a class="a-cat-catalog" href="{{item.category}}/{{item.name}}">{{ item.name }}</a>
+                            (<a class="a-cat-catalog" href="{{item.category}}">{{ item.category }}</a>)</td>
+
+                            {% if session.logged_in %}
+                            {% if item.user_id == user_id %}
+
+                                <td class="td2-catalog"><a href="edit_item/{{item.id}}" class="btn btn-edit pull-right">Изменить</a></td>
+                                <td class="td2-catalog">
+
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-delete" data-toggle="modal" data-target="#itemdeleteWarning{{loop.index}}">
+                                        Удалить
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="itemdeleteWarning{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="deleteWarningLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Внимание</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Вы уверены что хотите удалить {{ item.name }}?<br />
+                                                    Действие не может быть отменено
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-go-back" data-dismiss="modal">Назад</button>
+                                                    <div class="btn btn-del-inline">
+                                                        <form action={{ url_for('delete_item', id=item.id) }} method='post'>
+                                                            <input type="hidden" name="_method" value="DELETE">
+                                                            <input type="submit" value="Delete" class="btn btn-delete">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            {% endif %}
+                            {% endif %}
+
+                        </tr>
+                    </table>
+                </li>
+            {% endfor %}
+            </ul>
+        </td>
+
+      </tr>
+    </table>
+
+{% endblock body %}

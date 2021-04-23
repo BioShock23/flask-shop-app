@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    {% for entry in singleitem %}
+        <h1>{{ entry.name }}</h1>
+        <hr>
+        <div>
+            {{ entry.detail | safe }}
+        </div>
+        <div class="btn-inline">
+            {% if session.logged_in %}
+            <div class="btn-edit-inline">
+                <a href="{{ url_for('edit_item', id=entry.id) }}" class="btn btn-edit pull-right">Изменить</a>
+            </div>
+            
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-delete btn-del-inline" data-toggle="modal" data-target="#deleteWarning">
+            Удалить
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteWarning" tabindex="-1" role="dialog" aria-labelledby="deleteWarningLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Внимание</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены что хотите удалить {{ entry.name }}?<br />
+                    Действие не может быть отменено
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-go-back" data-dismiss="modal">Назад</button>
+                    <div class="btn btn-del-inline">
+                        <form action={{ url_for('delete_item', id=entry.id) }} method='post'>
+                            <input type="hidden" name="_method" value="УДАЛИТЬ">
+                            <input type="submit" value="Удалить" class="btn btn-delete">
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+    
+{% endblock body %}

@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    {% for cat in catalog %}
+        <h1>{{ cat.name }}</h1>
+        <h5>( {{ countitems }} товаров )</h5>
+        <hr>
+        <div>
+            <ul class="list-group category-list">
+            {% for item in category %}
+                <li class="list-group-item catalog-list">
+                    <table class="table-responsive">
+                        <tr>
+                            <td class="td1-catalog">
+                                <a class="a-cat-catalog" href="{{item.category}}/{{item.name}}"><h5>{{ item.name }}</h5></a>
+                                <br />
+                                {{ item.detail | truncate(150) | safe}}
+                                <br />
+                                <a class="a-cat-catalog" href="{{item.category}}/{{item.name}}">[Смотреть больше...]</a>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+           {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    
+{% endblock body %}
